@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  testes:
+    name: testes (${{ matrix.so }}, node ${{ matrix.node }})
+    runs-on: ${{ matrix.so }}
+    strategy:
+      fail-fast: false
+      matrix:
+        so: [ubuntu-latest, windows-latest, macos-latest]
+        node: ['20', '22', '24']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      # O `shell: bash` nao e enfeite: no PowerShell do runner o glob
+      # `testes/*.test.js` chega ao node como texto literal e ele procura um
+      # arquivo com asterisco no nome.
+      - name: as regras e os numeros do README
+        shell: bash
+        run: node --test testes/nucleo.test.js testes/medidas.test.js
+      - name: as duas faixas longas e o 4x3 inteiro
+        shell: bash
+        run: node --test testes/pesados.test.js
+
+  medidas:
+    name: tabelas do README
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: onde ter mais peca termina em derrota
+        run: node ferramentas/medidor.js material
+      - name: as quatro classes em todas as posicoes
+        run: node ferramentas/medidor.js classes
+      - name: idem, so nas posicoes sem casa vazia
+        run: node ferramentas/medidor.js cheias
+      - name: a tabela cruzada das duas reducoes
+        run: node ferramentas/medidor.js cruzada
+      - name: a prova da soma e o controle negativo
+        run: node ferramentas/medidor.js soma
+      - name: o motor bom contra o motor burro
+        run: node ferramentas/medidor.js duelo
+      - name: quem ganha a abertura em xadrez
+        run: node ferramentas/medidor.js aberturas
