@@ -1,0 +1,13 @@
+{
+  "name": "clobber",
+  "version": "1.0.0",
+  "description": "Clobber resolvido por varredura completa: quem ganha cada tabuleiro pequeno e quanto a decomposicao em componentes custa",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test testes/*.test.js",
+    "medir": "node ferramentas/medidor.js"
+  }
+}
