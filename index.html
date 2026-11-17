@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clobber — quem ganha cada tabuleiro</title>
+<meta name="description" content="Clobber varrido por tabuleiro inteiro: no 2xn a abertura &#233; de segundo jogador exatamente nos m&#250;ltiplos de 3, no 3xn exatamente nos pares, e na faixa 1x5 o lado com mais pe&#231;as perde.">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<header>
+  <h1>Clobber</h1>
+  <p>Duas cores no tabuleiro. Na sua vez você empurra uma peça sua para cima de uma peça vizinha do adversário, e a dele sai do jogo. Quem fica sem jogada perde. Não há como passar, não há empate, e cada jogada tira exatamente uma peça: a partida sempre acaba.</p>
+</header>
+
+<main>
+
+<section>
+  <h2>Jogue</h2>
+  <div class="painel">
+    <div class="linha" style="margin-bottom:16px">
+      <select id="tamanho" aria-label="tamanho do tabuleiro">
+        <option value="5x1">1 × 5 — o lado com mais peça perde</option>
+        <option value="6x1">1 × 6</option>
+        <option value="3x2">2 × 3 — segundo jogador</option>
+        <option value="4x2">2 × 4</option>
+        <option value="3x3" selected>3 × 3</option>
+        <option value="4x3">3 × 4 — segundo jogador</option>
+        <option value="5x3">3 × 5</option>
+        <option value="4x4">4 × 4</option>
+      </select>
+      <button id="quem" type="button">Quem ganha daqui?</button>
+      <button id="voltar" type="button">Voltar</button>
+      <button id="reiniciar" type="button">Reiniciar</button>
+    </div>
+    <p class="fraco">Vez das <strong id="vez">pretas</strong>. Clique numa peça sua e depois na peça vizinha que você quer comer.</p>
+    <div id="tabuleiro"></div>
+    <p id="estado"></p>
+  </div>
+</section>
+
+<section>
+  <h2>O que a varredura respondeu</h2>
+
+  <p>Clobber é um jogo <strong>partidário</strong>: as pretas só mexem peça preta e as brancas só mexem peça branca. Isso muda a pergunta. Num jogo imparcial basta saber se a posição é ganha ou perdida para quem está na vez; aqui preciso de duas respostas, uma para cada lado começando, e o par das duas dá a classe:</p>
+
+  <ul>
+    <li><strong>N</strong> — ganha quem joga primeiro.</li>
+    <li><strong>P</strong> — ganha quem joga por último.</li>
+    <li><strong>L</strong> — ganham as pretas, comece quem começar.</li>
+    <li><strong>R</strong> — ganham as brancas, comece quem começar.</li>
+  </ul>
+
+  <h3>Ter mais peça não é vantagem</h3>
+  <p>Na faixa de comprimento ímpar a abertura em xadrez dá uma peça a mais para as pretas: o <code>1×5</code> é <code>#O#O#</code>, três contra duas. Mesmo assim ele é <strong>R</strong> — ganham as brancas. O mesmo acontece no <code>1×7</code>, no <code>1×11</code> e no <code>1×13</code>. Só o <code>1×3</code> e o <code>1×9</code> salvam a vantagem de material.</p>
+  <p>O motivo é curto: a peça extra das pretas está numa ponta, e ponta é onde se tem menos vizinho para comer.</p>
+
+  <h3>Os dois padrões limpos</h3>
+  <p>No <code>2×n</code> a abertura é de segundo jogador <strong>exatamente nos múltiplos de 3</strong>, medido de <code>n=2</code> a <code>n=11</code>. No <code>3×n</code> é de segundo jogador <strong>exatamente nos pares</strong>, medido de <code>n=3</code> a <code>n=7</code>.</p>
+  <p>As duas faixas param onde a medida parou, e não onde a curiosidade acabou: o <code>2×12</code> e o <code>3×8</code> têm 24 casas e estouram o <code>Map</code> do JavaScript, que trava em 2<sup>24</sup> entradas. A tabela diz o que foi medido.</p>
+
+  <h3>A prova da soma, e por que ela não é vazia</h3>
+  <p>O negativo de um jogo é o mesmo jogo com os papéis trocados, e a teoria obriga que <code>P + (−P)</code> seja sempre posição de segundo jogador. Em Clobber esse negativo é literal: trocar as cores do tabuleiro. Então dá para <em>jogar</em> a soma, em dois tabuleiros ao mesmo tempo, e conferir — sem calcular valor de jogo nenhum.</p>
+  <p>Passa em todas as posições de todos os tabuleiros testados. Mas um juiz que aprova tudo não é juiz, então o mesmo teste roda com um controle negativo: somar a posição <em>com ela mesma</em> em vez do espelho. Aí caem 16 das 81 posições do <code>1×4</code>. É isso que mostra que o teste está medindo alguma coisa.</p>
+</section>
+
+<section>
+  <h2>As duas reduções se multiplicam</h2>
+  <p>A busca tem duas reduções independentes. Uma é a simetria do retângulo (4 imagens, 8 se for quadrado). A outra vem da própria regra: trocar as cores troca os papéis, então perguntar quem ganha com o preto na vez é a mesma pergunta que perguntar quem ganha com o branco na vez no tabuleiro de cores trocadas.</p>
+  <p>Medir uma de cada vez e somar os ganhos no papel é um erro que já custou caro em outro projeto do acervo, onde a melhor ordem com a poda ligada era a pior sem ela. Aqui as quatro combinações foram medidas, e o resultado é que as duas reduções <strong>se multiplicam sem interferência</strong>: no <code>3×3</code>, 6,88× da simetria vezes 2,00× das cores dá 13,75×, que é exatamente o ganho das duas juntas.</p>
+  <p>A troca de cores dá <strong>2,00× exatos</strong> em todos os tabuleiros medidos, sem uma posição sobrando.</p>
+</section>
+
+<section>
+  <h2>Como rodar</h2>
+  <p>Precisa de Node 20 ou mais novo. Sem dependência nenhuma.</p>
+  <pre><code>npm test          # a suite inteira
+npm run medir     # todas as tabelas
+node ferramentas/medidor.js cruzada   # uma tabela so</code></pre>
+  <p>O código do repositório está em <a href="https://github.com/condeDeveloper/clobber">github.com/condeDeveloper/clobber</a>.</p>
+</section>
+
+</main>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
