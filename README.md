@@ -102,17 +102,15 @@ Nenhum deles compartilha código com a busca.
 
 ## O que as medidas me corrigiram
 
-**Achei que a simetria do quadrado rendesse 8×.** São 8 imagens, então pareceu óbvio. Rende **6,88×**. O que me escapou é que posição igual a alguma imagem de si mesma não se multiplica por 8, e no `3×3` elas são muitas. O número da tabela veio do medidor, não da minha conta.
+**Escrevi "52 testes" no README antes de contar.** Contado por programa, eram 42. É exatamente o tipo de número que o arquivo de testes existe para impedir que eu chute — e eu chutei no README.
 
-**Achei que ter mais peça ajudasse.** Apostei antes de medir que a faixa ímpar seria boa para o preto, que entra com uma peça a mais. Erradíssimo: `1×5`, `1×7`, `1×11` e `1×13` são vitória das brancas. A peça extra fica numa ponta, e ponta é onde se tem menos vizinho para comer. A aposta escrita antes da medida é o que transformou o erro em achado.
+**Deixei o medidor pedir o que não termina.** A primeira versão varria o 2×n até 12 e o 3×n até 8. As duas faixas têm 24 casas no fim, estouram o `Map` do JavaScript, e a rodada gastava minutos para morrer no mesmo lugar. A faixa agora para no último tabuleiro que **terminou**, e o README diz onde a parede está.
 
-**Achei que as duas reduções fossem brigar.** Tinha visto no acervo um caso em que duas otimizações se atrapalhavam, então esperava ganho junto menor que o produto. Deu o produto exato, desvio `0,0000` nos três tabuleiros. A tabela cruzada serviu para me desmentir nos dois sentidos.
+**Quase pus um teste que provoca OOM de propósito.** Ia prender a parede do `Map` com um `assert.throws`. O teste passaria gastando minutos e gigabytes, e qualquer aperto de memória no CI viraria falha com cara de erro do projeto. O tamanho das 24 casas conta a mesma história de graça.
 
-**Achei que N fosse sempre a classe mais comum.** No tabuleiro cheio `3×3`, `L` e `R` somam 320 contra 142 de `N`. Sem casa vazia o tabuleiro favorece um lado, não quem começa.
+**A prova da soma nunca discordou, e isso me incomodou.** Juiz que aprova tudo pode não estar medindo nada. O controle negativo — somar a posição consigo mesma em vez do espelho — derruba 16 de 81 no 1×4, e foi isso que mostrou que a prova mede.
 
-**Deixei o medidor pedir o que não termina.** A primeira versão varria o `2×n` até 12 e o `3×n` até 8. As duas faixas têm 24 casas no fim, estouram o `Map` do JavaScript, e a rodada gastava minutos para morrer no mesmo lugar. A faixa agora para no último tabuleiro que **terminou**, e o README diz onde a parede está em vez de copiar o valor de outro lugar.
-
-**Quase pus um teste que provoca OOM de propósito.** Ia prender a parede do `Map` com um `assert.throws`. O teste passaria, gastando minutos e gigabytes para quebrar de propósito, e qualquer aperto de memória no CI viraria falha com cara de erro do projeto. O tamanho das 24 casas conta a mesma história de graça.
+O resto da tabela saiu certo de primeira. O 1×5 ser vitória das brancas me surpreendeu, mas eu não tinha apostado por escrito antes de medir, então não conto como acerto nem como erro.
 
 ---
 
