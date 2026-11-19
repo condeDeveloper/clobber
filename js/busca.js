@@ -59,7 +59,7 @@ export class Motor {
         }
       }
     }
-    return chave({ pretas: melhorP, brancas: melhorB }, melhorQ)
+    return chave({ pretas: melhorP, brancas: melhorB }, melhorQ, this.g.casas)
   }
 
   /** `quem` esta na vez: ele ganha? */

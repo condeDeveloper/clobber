@@ -121,9 +121,21 @@ export function trocaCores (pos) {
   return { pretas: pos.brancas, brancas: pos.pretas }
 }
 
-/** Chave inteira da posicao, para memoria. Cabe em 60 bits ate 30 casas. */
-export function chave (pos, quem) {
-  return (pos.pretas >>> 0) * 2147483648 * 2 + (pos.brancas >>> 0) * 2 + quem
+/**
+ * Chave da posicao, para memoria.
+ *
+ * A primeira versao era `pretas * 2^32 + brancas * 2 + quem`, com o comentario
+ * "cabe em 60 bits ate 30 casas". Nao cabe: o JavaScript so guarda inteiros
+ * exatos ate 2^53. Com 22 casas ou mais, `pretas * 2^32` pode passar disso, o
+ * passo entre dois numeros representaveis vira 2, e o ultimo bit — quem esta na
+ * vez — some. Aqui ele nao chegou a morder: a forma canonica escolhe a menor das
+ * imagens e isso mantem `pretas` pequeno; o 2x11, refeito com chave em texto, deu
+ * o mesmo N com os mesmos 3.727.431 nos. Mas o defeito existia. Agora o
+ * deslocamento e o minimo que cabe, e acima de 26 casas a chave vira texto.
+ */
+export function chave (pos, quem, casas = 30) {
+  if (casas <= 26) return (pos.pretas >>> 0) * Math.pow(2, casas + 1) + (pos.brancas >>> 0) * 2 + quem
+  return `${pos.pretas >>> 0},${pos.brancas >>> 0},${quem}`
 }
 
 /** Desenha o tabuleiro em texto: # preta, O branca, . vazia. */

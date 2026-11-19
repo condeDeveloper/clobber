@@ -188,3 +188,11 @@ test('o motor bom e o motor burro concordam nas 729 posicoes do 3x2', () => {
     assert.equal(bom.classe(pos), burro.classe(pos))
   }
 })
+
+test('a chave separa quem esta na vez mesmo com a mascara alta', async () => {
+  const { chave } = await import('../js/nucleo.js')
+  // Com 22 casas e a ultima casa preta, a chave antiga perdia o bit da vez.
+  const pos = { pretas: 1 << 21, brancas: 1 }
+  assert.notEqual(chave(pos, 0, 22), chave(pos, 1, 22))
+  assert.notEqual(chave(pos, 0, 28), chave(pos, 1, 28))
+})

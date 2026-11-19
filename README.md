@@ -102,6 +102,8 @@ Nenhum deles compartilha código com a busca.
 
 ## O que as medidas me corrigiram
 
+**A chave da memoria podia colidir, e eu so vi dois dias depois.** Ela era `pretas · 2³² + brancas · 2 + vez`, com um comentário dizendo que cabia em 60 bits. Não cabe: o JavaScript só guarda inteiros exatos até 2⁵³, e com 22 casas ou mais o bit de quem está na vez some no arredondamento. Quem me mostrou foi outro projeto, o `konane`, onde o mesmo defeito deixou três cantos do 5×5 resistindo e o quarto não. Aqui ele não mordeu — a forma canônica escolhe a menor das imagens e isso mantém a máscara pequena; refiz o 2×11 com chave em texto e saiu o mesmo N, com os mesmos 3.727.431 nós —, mas estava lá. Agora o deslocamento é o mínimo que cabe e, acima de 26 casas, a chave vira texto.
+
 **Escrevi "52 testes" no README antes de contar.** Contado por programa, eram 42. É exatamente o tipo de número que o arquivo de testes existe para impedir que eu chute — e eu chutei no README.
 
 **Deixei o medidor pedir o que não termina.** A primeira versão varria o 2×n até 12 e o 3×n até 8. As duas faixas têm 24 casas no fim, estouram o `Map` do JavaScript, e a rodada gastava minutos para morrer no mesmo lugar. A faixa agora para no último tabuleiro que **terminou**, e o README diz onde a parede está.
@@ -133,7 +135,7 @@ node ferramentas/medidor.js soma      # a prova da soma e o controle negativo
 - `js/medidas.js` — as tabelas do README, cada uma calculada uma vez só.
 - `js/app.js` — a página jogável, usando o mesmo motor.
 - `ferramentas/medidor.js` — imprime as tabelas.
-- `testes/` — 42 testes, com os números do README presos.
+- `testes/` — 43 testes, com os números do README presos.
 
 ## Licença
 
